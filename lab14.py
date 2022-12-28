@@ -1,77 +1,26 @@
-def caminho(tabuleiro, posicao_atual, posicao_final, cor):
-    counter = 0
-    if posicao_atual[0] == posicao_final[0] and posicao_atual[1] == posicao_final[1]:
-        return True
-    elif posicao_atual in paes:
-        return False
-    else:
-        verificacao = [posicao_atual[0] + 1 < len(tabuleiro),
-                       posicao_atual[0] - 1 > 0,
-                       posicao_atual[1] + 1 < len(tabuleiro[0]),
-                       posicao_atual[1] - 1 > 0]
-        sinal = [posicao_atual[0] + 1, posicao_atual[0] - 1, posicao_atual[0], ]
-        for i in range(4):
-            if verificacao:
-                nova_cor = tabuleiro[posicao_atual[0] + 1][posicao_atual[1]]
-                if nova_cor != cor:
-                    if posicao_atual not in paes:
-                        paes.append(list(posicao_atual))
-                    nova_posicao = list(posicao_atual)
-                    nova_posicao[0] = posicao_atual[0] + 1
-                    result = caminho(tabuleiro, nova_posicao, posicao_final, nova_cor)
-                    if result:
-                        return True
-                else:
-                    counter += 1
-            if posicao_atual[0] - 1 > 0:
-                nova_cor = tabuleiro[posicao_atual[0] - 1][posicao_atual[1]]
-                if nova_cor != cor:
-                    if posicao_atual not in paes:
-                        paes.append(list(posicao_atual))
-                    nova_posicao = list(posicao_atual)
-                    nova_posicao[0] = posicao_atual[0] - 1
-                    result = caminho(tabuleiro, nova_posicao, posicao_final, nova_cor)
-                    if result:
-                        return True
-                else:
-                    counter += 1
-            if posicao_atual[1] + 1 < len(tabuleiro[0]):
-                nova_cor = tabuleiro[posicao_atual[0]][posicao_atual[1] + 1]
-                if nova_cor != cor:
-                    if posicao_atual not in paes:
-                        paes.append(list(posicao_atual))
-                    nova_posicao = list(posicao_atual)
-                    nova_posicao[1] = posicao_atual[1] + 1
-                    result = caminho(tabuleiro, nova_posicao, posicao_final, nova_cor)
-                    if result:
-                        return True
-                else:
-                    counter += 1
-            if posicao_atual[1] - 1 > 0:
-                nova_cor = tabuleiro[posicao_atual[0]][posicao_atual[1] - 1]
-                if nova_cor != cor:
-                    if posicao_atual not in paes:
-                        paes.append(list(posicao_atual))
-                    nova_posicao = list(posicao_atual)
-                    nova_posicao[1] = posicao_atual[1] - 1
-                    result = caminho(tabuleiro, nova_posicao, posicao_final, nova_cor)
-                    if result:
-                        return True
-                else:
-                    counter += 1
-        if counter == 4:
-            return False
+n = int(input())
 
+a = []
+for i in range(n):
+    a.append([int(x) for x in input().split()])
 
-L = int(input())
-tabuleiro = [input().split() for _ in range(L)]
-l1, c1, l2, c2 = [int(i) for i in input().split()]
+m = len(a[0])
 
-posicao_inicial = [l1, c1]
-posicao_final = [l2, c2]
-paes = []
-resultado = caminho(tabuleiro, posicao_inicial, posicao_final, tabuleiro[l1][c1])
-if resultado:
-    print("caminho encontrado")
-else:
-    print("caminho nao encontrado")
+si, sj, ti, tj = map(int, input().split())
+
+di = [0, 0, 1, -1]
+dj = [1, -1, 0, 0]
+
+vis = [[False for j in range(m)] for i in range(n)]
+
+def dfs(i, j):
+    vis[i][j] = True
+    for k in range(4):
+        ni = i + di[k]
+        nj = j + dj[k]
+        if (ni >= 0) and (ni < n) and (nj >= 0) and (nj < m) and (not vis[ni][nj]) and (a[i][j] != a[ni][nj]):
+            dfs(ni, nj)
+
+dfs(si, sj)
+
+print('caminho encontrado' if vis[ti][tj] else 'caminho nao encontrado')
